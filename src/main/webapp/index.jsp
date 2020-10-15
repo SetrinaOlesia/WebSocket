@@ -5,11 +5,11 @@
     <title>Title</title>
     <style>
         .chatbox {
- |
+            display: none;
         }
 
         .messages {
-            background-color: #a2e5f6;
+            background-color: #b1e6f5;
             width: 500px;
             padding: 20px;
         }
@@ -22,38 +22,57 @@
         }
 
         .messages .msg .from {
-            background-color: #f8ddfa;
+            background-color: #e9d9ea;
             line-height: 30px;
         }
 
         .messages .msg .text {
-            background-color: #e6cae8;
+            background-color: #e9d9ea;
             padding: 10px;
             text-align: center;
-            color: whitesmoke;
+            color: #f5f5f5;
         }
 
         textarea.msg {
+            background-color: #e9d9ea;
             width: 540px;
             padding: 10px;
             resize: none;
             border: none;
-            box-shadow: 2px 2px 2px 2px  inset ;
-         }
+            box-shadow: 0.3px 0.3px 5px 0.5px inset;
+        }
     </style>
     <script>
         let chatUnit = {
-            init(){
+            init() {
                 this.startbox = document.querySelector(".start");
                 this.chatbox = document.querySelector(".chatbox");
                 this.startBtn = this.startbox.querySelector("button");
+                this.nameInput = this.startbox.querySelector("input");
                 this.bindEvents();
             },
-            bindEvents(){
-                this.startBtn.addEventListener("click", e => this.openSocket)
+
+            bindEvents() {
+                this.startBtn.addEventListener("click", e => this.openSocket())
+            },
+            onOpenSock() {
+
+            },
+            openSocket() {
+
+                this.ws = new WebSocket("ws://localhost:8080/chat")
+                this.ws.onopen = () => this.onOpenSock();
+                this.ws.onMessage = (e) => this.onMessage(JSON.parse(e.data))
+                this.name = this.nameInput.value;
+                this.startbox.style.display = "none";
+                this.chatbox.style.display = "block";
+
             }
 
-        }
+        };
+
+        window.addEventListener("load", e => chatUnit.init());
+
     </script>
 </head>
 <body>
@@ -65,8 +84,8 @@
 <div class="chatbox">
     <div class="messages">
         <div class="msg">
-            <div class="from"> name </div>
-            <div class="text"> Hello  </div>
+            <div class="from"> name</div>
+            <div class="text"> Hello</div>
         </div>
     </div>
 
